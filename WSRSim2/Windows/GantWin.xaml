@@ -34,7 +34,16 @@
 
 
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Grid.Row="1">
-            <Grid x:Name="GantGrid" />
+            <Grid x:Name="GantGrid" MouseMove="GantGrid_MouseMove">
+                <Grid.ToolTip>
+                    <ToolTip x:Name="TaskTp" Visibility="Collapsed">
+                        
+                            <Label Content="{Binding SpecialTime}" Width="Auto"/>
+                            
+                       
+                    </ToolTip>
+                </Grid.ToolTip>
+            </Grid>
         </ScrollViewer>
        
     </Grid>

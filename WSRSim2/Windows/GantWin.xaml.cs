@@ -46,7 +46,7 @@ namespace WSRSim2.Windows
                 {
                     return;
                 }
-                for(int i = 0;i <= Db.Task.Count(); i++)
+                for(int i = 0;i <= Db.Task.Where(el => el.ProjectId == SelectedProject.Id).Count(); i++)
                 {
                     GantGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
 
@@ -80,12 +80,85 @@ namespace WSRSim2.Windows
 
                 }
 
-                
+                for(int i = 0; i < Db.Task.Where(el => el.ProjectId == SelectedProject.Id).Count(); i++)
+                {
+                    Label label = new Label();
+                    label.Background = Brushes.Wheat;
+                    label.VerticalAlignment = VerticalAlignment.Stretch;
+                    label.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    label.Width = double.NaN;
+                    label.Height = double.NaN;
+                    Grid.SetRow(label, i);
+                    DateTime start = new DateTime();
+                    DateTime end = new DateTime();
+                    var item = Db.Task.Where(el => el.ProjectId == SelectedProject.Id).ToList()[i] as Models.Task;
+                    if(item.StartActualTime == null)
+                    {
+                        start = (DateTime)item.CreatedTime;
+                    }
+                    else
+                    {
+                        start = (DateTime)item.StartActualTime;
+                    }
+                    if (item.FinishActualTime == null)
+                    {
+                        end = (DateTime)item.Deadline;
+                    }
+                    else
+                    {
+                        end = (DateTime)item.FinishActualTime;
+                    }
+                    try
+                    {
+                        if (start.Date < StartDate && end.Date >= StartDate.Date)
+                        {
+                            label.Content = "(не влезло) " + item.FullTitle;
+                            Grid.SetColumn(label, 0);
+                        }
+                        else
+                        {
+                            Grid.SetColumn(label, (start.Date - StartDate).Days);
+                            label.Content = item.FullTitle;
+                        }
+                        
+                        if(end.Date <= EndDate) 
+                        {
+                            Grid.SetColumnSpan(label, (end.Date - start.Date).Days +1);
+                            label.Content = item.FullTitle;
+                        }
+                        else
+                        {
+                            Grid.SetColumnSpan(label, (EndDate.Date - start.Date).Days +1);
+                            label.Content ="(не влезло) " + item.FullTitle;
+                        }
+                        
+                        GantGrid.Children.Add(label);
+                        label.MouseDown += Label_MouseDown;
+                        label.Tag = item;
+                    }
+                    catch (Exception)
+                    {
+
+                        return;
+                    }
+                    
+                   
+                }
+
+
+
             }
             catch (Exception ex)
             {
                 Error(ex.Message);
             }
+        }
+
+        private void Label_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TaskTp.DataContext = (sender as Label).Tag;
+            TaskTp.Visibility = Visibility.Visible;
+            TaskTp.IsOpen = true;
         }
 
         private void SizwSl_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -264,6 +337,15 @@ namespace WSRSim2.Windows
             {
 
             }
+        }
+
+       
+
+        private void GantGrid_MouseMove(object sender, MouseEventArgs e)
+        {
+            TaskTp.DataContext = null;
+            TaskTp.Visibility = Visibility.Collapsed;
+            TaskTp.IsOpen = false;
         }
     }
 }
