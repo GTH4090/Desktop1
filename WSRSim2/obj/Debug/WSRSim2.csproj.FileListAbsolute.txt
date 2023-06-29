@@ -28,3 +28,5 @@ E:\HACKERMAN\Repos\WSRSim2\WSRSim2\obj\Debug\Pages\Gant.g.cs
 E:\HACKERMAN\Repos\WSRSim2\WSRSim2\obj\Debug\Pages\TaskList.g.cs
 E:\HACKERMAN\Repos\WSRSim2\WSRSim2\obj\Debug\Pages\Gant.baml
 E:\HACKERMAN\Repos\WSRSim2\WSRSim2\obj\Debug\Pages\TaskList.baml
+E:\HACKERMAN\Repos\WSRSim2\WSRSim2\obj\Debug\Windows\GantWin.g.cs
+E:\HACKERMAN\Repos\WSRSim2\WSRSim2\obj\Debug\Windows\GantWin.baml

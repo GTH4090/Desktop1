@@ -6,9 +6,9 @@
       xmlns:local="clr-namespace:WSRSim2.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Гант">
+      Title="Гант" Loaded="Page_Loaded">
 
     <Grid>
-        <Label Content="Гант"/>
+        
     </Grid>
 </Page>

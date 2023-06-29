@@ -1,0 +1,41 @@
+﻿<Window x:Class="WSRSim2.Windows.GantWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WSRSim2.Windows"
+        mc:Ignorable="d"
+        Title="GantWin" Height="1080" Width="1920" MinHeight="1080" MinWidth="1920" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" WindowState="Maximized" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="Масштаб" Width="Auto"/>
+            <Slider x:Name="SizwSl" Maximum="250" Minimum="50" ValueChanged="SizwSl_ValueChanged" Width="300" VerticalAlignment="Center"/>
+            <GroupBox Header="Промежуток">
+                <ComboBox x:Name="IntervalCbx" SelectionChanged="IntervalCbx_SelectionChanged">
+                    <ComboBoxItem Content="Неделя"/>
+                    <ComboBoxItem Content="2 недели"/>
+                    <ComboBoxItem Content="Месяц"/>
+                    <ComboBoxItem Content="Год"/>
+                </ComboBox>
+            </GroupBox>
+            <Button x:Name="PrevBtn" Content="&lt;" Width="30" Click="PrevBtn_Click"/>
+            <Label x:Name="StartDateLb" Margin="0, 5"/>
+            <Label Content="-" Margin="0, 5" Width="Auto"/>
+            <Label x:Name="FinishDateLb" Margin="0, 5"/>
+            <Button x:Name="NextBtn" Content=">" Width="30" Click="NextBtn_Click"/>
+            <Button x:Name="ImportBtn" Content="Испорт CSV" Click="ImportBtn_Click"/>
+        </StackPanel>
+        <Button x:Name="CloseBtn" Content="Закрыть" HorizontalAlignment="Right" Click="CloseBtn_Click"/>
+
+
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Grid.Row="1">
+            <Grid x:Name="GantGrid" />
+        </ScrollViewer>
+       
+    </Grid>
+</Window>
