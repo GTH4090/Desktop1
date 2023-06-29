@@ -144,6 +144,7 @@ namespace WSRSim2.Pages
                     attachment.Attachment = File.ReadAllBytes(openFile.FileName);
                     attachment.TaskId = (grid1.DataContext as Models.Task).Id;
                     Db.TaskAttachment.Add(attachment);
+
                 }
             }
             catch (Exception ex)
