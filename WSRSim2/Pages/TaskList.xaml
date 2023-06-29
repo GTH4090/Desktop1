@@ -1,0 +1,128 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WSRSim2.Pages"
+      xmlns:Models="clr-namespace:WSRSim2.Models" x:Class="WSRSim2.Pages.TaskList"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Задачи" Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <CollectionViewSource x:Key="taskViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Task}}"/>
+        <CollectionViewSource x:Key="taskViewSource1" d:DesignSource="{d:DesignInstance {x:Type Models:Task}}"/>
+        <CollectionViewSource x:Key="taskViewSource2" d:DesignSource="{d:DesignInstance {x:Type Models:Task}}"/>
+        <CollectionViewSource x:Key="taskAttachmentViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:TaskAttachment}}"/>
+        <CollectionViewSource x:Key="taskSpectatorViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:TaskSpectator}}"/>
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource taskViewSource1}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button x:Name="AddBtn" Content="Добавить" Click="AddBtn_Click"/>
+
+        <GroupBox Grid.Column="1" Width="Auto" HorizontalAlignment="Stretch">
+            <TextBox x:Name="SearchTbx" Width="Auto" HorizontalAlignment="Stretch" TextChanged="SearchTbx_TextChanged"/>
+        </GroupBox>
+
+        <DataGrid IsReadOnly="True" x:Name="taskDataGrid" SelectionChanged="taskDataGrid_SelectionChanged" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.ColumnSpan="2" Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="deadlineColumn" Binding="{Binding Deadline}" Header="Deadline" Width="SizeToHeader"/>
+                <DataGridTextColumn x:Name="fullTitleColumn" Binding="{Binding FullTitle}" Header="Full Title" Width="SizeToHeader"/>
+                <DataGridTextColumn x:Name="shortTitleColumn" Binding="{Binding ShortTitle}" Header="Short Title" Width="SizeToHeader"/>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="DelBtn" Content="Удалить" Click="DelBtn_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{Binding TaskStatus.ColorHex}"/>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+
+        <ScrollViewer Grid.Column="1" Grid.Row="1"  x:Name="TaskSp" Visibility="Collapsed">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <Grid x:Name="grid1"  >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Content="Deadline:" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+                    <DatePicker x:Name="deadlineDatePicker" Grid.Column="1" HorizontalAlignment="Left" Margin="3" Grid.Row="0" SelectedDate="{Binding Deadline, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center"/>
+                    <Label Grid.Column="0" Content="Executive Employee Id:" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="executiveEmployeeIdComboBox" Grid.Column="1" DisplayMemberPath="Name" HorizontalAlignment="Left" Height="NaN" SelectedItem="{Binding Employee}" Margin="3" Grid.Row="1" VerticalAlignment="Center" Width="120">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel/>
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
+                    </ComboBox>
+                    <Label Grid.Column="0" Content="Full Title:" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center"/>
+                    <TextBox x:Name="fullTitleTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="NaN" Margin="3" Grid.Row="2" Text="{Binding FullTitle, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                    <Label Grid.Column="0" Content="Short Title:" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center"/>
+                    <TextBox IsReadOnly="True" x:Name="shortTitleTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="NaN" Margin="3" Grid.Row="3" Text="{Binding ShortTitle, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                    <Label Grid.Column="0" Content="Status Id:" HorizontalAlignment="Left" Margin="3" Grid.Row="4" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="statusIdComboBox" Grid.Column="1" DisplayMemberPath="Name" HorizontalAlignment="Left" Height="NaN" SelectedItem="{Binding TaskStatus}"  Margin="3" Grid.Row="4" VerticalAlignment="Center" Width="120">
+
+                    </ComboBox>
+
+                    <DataGrid x:Name="taskAttachmentDataGrid" Grid.Row="5" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding TaskAttachment}" RowDetailsVisibilityMode="VisibleWhenSelected">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Приложение" Width="Auto">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button x:Name="DownLoadBtn" Content="Загрузить" Click="DownLoadBtn_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid x:Name="taskSpectatorDataGrid" AutoGenerateColumns="False" Grid.Row="6" EnableRowVirtualization="True" ItemsSource="{Binding TaskSpectator}" RowDetailsVisibilityMode="VisibleWhenSelected">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="employeeIdColumn" Binding="{Binding Employee.Name}" Header="Employee" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </Grid>
+                <StackPanel Orientation="Horizontal" x:Name="SpectatorSp">
+                    <Button x:Name="AddSpectatorBtn" Content="Добавить наблюдателя" Click="AddSpectatorBtn_Click" Width="Auto"/>
+                    <ComboBox x:Name="SpectatorCbx" DisplayMemberPath="Name"/>
+                </StackPanel>
+
+                <Button x:Name="AddAttachment" Content="Загрузить приложение" Click="AddAttachment_Click" Width="Auto"/>
+                <Button x:Name="SaveBtn" Content="Сохранить" Click="SaveBtn_Click"/>
+                <Button x:Name="CloseBtn" Content="Закрыть" Click="CloseBtn_Click"/>
+
+            </StackPanel>
+        </ScrollViewer>
+        
+        
+
+
+
+
+
+    </Grid>
+</Page>
