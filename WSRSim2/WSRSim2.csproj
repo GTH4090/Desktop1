@@ -72,6 +72,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Employee.cs" />
+    <Compile Include="Classes\TaskHistory.cs" />
     <Compile Include="Windows\GantWin.xaml.cs">
       <DependentUpon>GantWin.xaml</DependentUpon>
     </Compile>

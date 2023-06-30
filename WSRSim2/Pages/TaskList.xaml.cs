@@ -164,7 +164,7 @@ namespace WSRSim2.Pages
                     TaskSp.Visibility = Visibility.Visible;
                     Grid.SetColumnSpan(taskDataGrid, 1);
                     grid1.DataContext = item;
-                    
+                    taskHistoryDataGrid.ItemsSource = item.TaskHistory.OrderByDescending(el => el.Date).ToList();
                     SpectatorCbx.ItemsSource = Db.Employee.Where(el => el.TaskSpectator.FirstOrDefault(j => j.TaskId == item.Id) == null).ToList();
                     SpectatorCbx.SelectedIndex = 0;
                 }

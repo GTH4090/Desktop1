@@ -15,6 +15,7 @@
         <CollectionViewSource x:Key="taskViewSource2" d:DesignSource="{d:DesignInstance {x:Type Models:Task}}"/>
         <CollectionViewSource x:Key="taskAttachmentViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:TaskAttachment}}"/>
         <CollectionViewSource x:Key="taskSpectatorViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:TaskSpectator}}"/>
+        <CollectionViewSource x:Key="taskHistoryViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:TaskHistory}}"/>
     </Page.Resources>
 
     <Grid DataContext="{StaticResource taskViewSource1}">
@@ -68,6 +69,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Content="Deadline:" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
                     <DatePicker x:Name="deadlineDatePicker" Grid.Column="1" HorizontalAlignment="Left" Margin="3" Grid.Row="0" SelectedDate="{Binding Deadline, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center"/>
@@ -101,7 +103,15 @@
                     </DataGrid>
                     <DataGrid x:Name="taskSpectatorDataGrid" AutoGenerateColumns="False" Grid.Row="6" EnableRowVirtualization="True" ItemsSource="{Binding TaskSpectator}" RowDetailsVisibilityMode="VisibleWhenSelected">
                         <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="employeeIdColumn" Binding="{Binding Employee.Name}" Header="Employee" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="employeeIdColumn" Binding="{Binding Employeyee.Name}" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <DataGrid x:Name="taskHistoryDataGrid"  AutoGenerateColumns="False" Grid.Row="7" EnableRowVirtualization="True"   RowDetailsVisibilityMode="VisibleWhenSelected" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="dateColumn" Binding="{Binding Date}" Header="Date" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="previousStatusColumn" Binding="{Binding PreviousStatus}" Header="Previous Status" IsReadOnly="True" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="statusIdColumn" Binding="{Binding StatusId}" Header="Status Id" Width="SizeToHeader"/>
                         </DataGrid.Columns>
                     </DataGrid>
 
@@ -118,7 +128,8 @@
             </StackPanel>
         </ScrollViewer>
         
-        
+
+
 
 
 

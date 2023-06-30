@@ -41,6 +41,10 @@ namespace WSRSim2.Pages
             loadGraph();
             loadGant();
         }
+
+        /// <summary>
+        /// Функция загрузки данных в тепловую диаграмму.
+        /// </summary>
         private void loadGant()
         {
 
@@ -92,23 +96,23 @@ namespace WSRSim2.Pages
                     Grid.SetRowSpan(border, 1);
                     double count = Db.Task.Where(el => el.ProjectId == SelectedProject.Id && (el.StartActualTime <= thisDate || el.CreatedTime <= thisDate) &&
                     (el.FinishActualTime >= thisDate || el.Deadline >= thisDate)).Count();
-                    if(count / max * 100 > 0 && count / max * 100 <= 20)
+                    if(count / max * 100 >= 0 && count / max * 100 < 20)
                     {
                         border.Background = (Brush)new BrushConverter().ConvertFromString("#b6bdff");
                     }
-                    if (count / max * 100 > 20 && count / max * 100 <= 40)
+                    if (count / max * 100 >= 20 && count / max * 100 < 40)
                     {
                         border.Background = (Brush)new BrushConverter().ConvertFromString("#919cff");
                     }
-                    if (count / max * 100 > 40 && count / max * 100 <= 60)
+                    if (count / max * 100 >= 40 && count / max * 100 < 60)
                     {
                         border.Background = (Brush)new BrushConverter().ConvertFromString("#6d7cff");
                     }
-                    if (count / max * 100 > 60 && count / max * 100 <= 80)
+                    if (count / max * 100 >= 60 && count / max * 100 < 80)
                     {
                         border.Background = (Brush)new BrushConverter().ConvertFromString("#485bff");
                     }
-                    if (count / max * 100 > 80 && count / max * 100 <= 100)
+                    if (count / max * 100 >= 80 && count / max * 100 <= 100)
                     {
                         border.Background = (Brush)new BrushConverter().ConvertFromString("#243aff");
                     }
@@ -134,6 +138,10 @@ namespace WSRSim2.Pages
             loadData();
             loadGraph();
         }
+
+        /// <summary>
+        /// Функция создания графика
+        /// </summary>
         private void createGraph()
         {
 
@@ -151,6 +159,10 @@ namespace WSRSim2.Pages
                 Error(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Функция загрузки данных в график
+        /// </summary>
         private void loadGraph()
         {
 
@@ -251,6 +263,12 @@ namespace WSRSim2.Pages
             
         }
 
+        /// <summary>
+        /// Обработчик события нажатия кнопки экспорта сотрудников
+        /// </summary>
+        /// <param name="sender">отпраавитель</param>
+        /// <param name="e">аргумент</param>
+
         private void EmployeeExportBtn_Click(object sender, RoutedEventArgs e)
         {
 
@@ -276,6 +294,12 @@ namespace WSRSim2.Pages
                 Error(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Обработчик события нажатия кнопки экспорта задач
+        /// </summary>
+        /// <param name="sender">отпраавитель</param>
+        /// <param name="e">аргумент</param>
 
         private void TasksExportBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -306,6 +330,12 @@ namespace WSRSim2.Pages
             }
         }
 
+
+        /// <summary>
+        /// Обработчик события нажатия кнопки экспорта открытых задач на следующий месяц
+        /// </summary>
+        /// <param name="sender">отпраавитель</param>
+        /// <param name="e">аргумент</param>
         private void OpenedNextMonthBtn_Click(object sender, RoutedEventArgs e)
         {
 
@@ -344,6 +374,12 @@ namespace WSRSim2.Pages
             }
         }
 
+
+        /// <summary>
+        /// Обработчик события нажатия кнопки экспорта закрытых задач на текущий месяц
+        /// </summary>
+        /// <param name="sender">отпраавитель</param>
+        /// <param name="e">аргумент</param>
         private void ClosedOnMonthBtn_Click(object sender, RoutedEventArgs e)
         {
 
