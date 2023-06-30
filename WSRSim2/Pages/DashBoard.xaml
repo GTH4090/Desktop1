@@ -91,6 +91,13 @@
             </DataGrid>
 
         </StackPanel>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2">
+            <Label Content="Экспорт в CSV"/>
+            <Button x:Name="EmployeeExportBtn" Content="Список сотрудников" Click="EmployeeExportBtn_Click"/>
+            <Button x:Name="TasksExportBtn" Content="Список задач" Click="TasksExportBtn_Click"/>
+            <Button x:Name="ClosedOnMonthBtn" Content="Закр. задачи на месяц" Width="Auto" Click="ClosedOnMonthBtn_Click"/>
+            <Button x:Name="OpenedNextMonthBtn" Content="Откр. задачи на след. месяц" Width="Auto" Click="OpenedNextMonthBtn_Click"/>
+        </StackPanel>
 
     </Grid>
 </Page>

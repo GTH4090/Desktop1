@@ -18,6 +18,7 @@ using WSRSim2.Models;
 using System.Windows.Threading;
 using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
+using Microsoft.Win32;
 
 namespace WSRSim2.Pages
 {
@@ -115,13 +116,144 @@ namespace WSRSim2.Pages
 
         private void Grid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            CheckSize();
+            
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             loadData();
-            CheckSize();
+            
+        }
+
+        private void EmployeeExportBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                string csvList = "Id;Name;\n";
+                SaveFileDialog saveFile = new SaveFileDialog();
+                if(saveFile.ShowDialog() == true)
+                {
+                    foreach (var item in Db.Employee.Where(el => el.Task.FirstOrDefault(l => l.ProjectId == SelectedProject.Id) != null))
+                    {
+                        csvList += $"{item.Id};{item.Name};\n";
+                    }
+                    if (!(saveFile.FileName + " ").Contains(".csv "))
+                    {
+                        saveFile.FileName = saveFile.FileName + ".csv";
+                    }
+                    File.WriteAllText(saveFile.FileName, csvList, UTF8Encoding.UTF8);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message);
+            }
+        }
+
+        private void TasksExportBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string csvList = "Id;Project;FullTitle;ShortTitle;Deadline;Status;Description;ExecutiveEmployee;CreatedTime;UpdatedTime;DeletedTime;StartActualTime;FinishActualTime;PreviousTask;\n";
+                SaveFileDialog saveFile = new SaveFileDialog();
+                if (saveFile.ShowDialog() == true)
+                {
+                    foreach (var item in Db.Task.Where(el => el.ProjectId == SelectedProject.Id))
+                    {
+                        csvList += $"{item.Id};{item.Project.FullTitle};{item.FullTitle};{item.ShortTitle};" +
+                            $"{item.Deadline};{item.TaskStatus.Name};{(item.Description != null ? item.Description : "")};{item.Employee.Name};" +
+                            $"{(item.CreatedTime != null ? item.CreatedTime.ToString() : "")};{(item.UpdatedTime != null ? item.UpdatedTime.ToString() : "")};" +
+                            $"{(item.DeletedTime != null ? item.DeletedTime.ToString() : "")};{(item.StartActualTime != null ? item.StartActualTime.ToString() : "")};" +
+                            $"{(item.FinishActualTime != null ? item.FinishActualTime.ToString() : "")};{(item.PreviousTaskId != null ? item.Task2.FullTitle: "")};\n";
+                    }
+                    if (!(saveFile.FileName + " ").Contains(".csv "))
+                    {
+                        saveFile.FileName = saveFile.FileName + ".csv";
+                    }
+                    File.WriteAllText(saveFile.FileName, csvList, UTF8Encoding.UTF8);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message);
+            }
+        }
+
+        private void OpenedNextMonthBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                DateTime StartDate = DateTime.Now.Date;
+                DateTime EndDate = DateTime.Now.Date;
+                StartDate = new DateTime(StartDate.Year, StartDate.Month +1, 1);
+                EndDate = StartDate.AddMonths(1).AddDays(-1);
+                DateTime start = new DateTime();
+                DateTime end = new DateTime();
+                string csvList = "Id;Project;FullTitle;ShortTitle;Deadline;Status;Description;ExecutiveEmployee;CreatedTime;UpdatedTime;DeletedTime;StartActualTime;FinishActualTime;PreviousTask;\n";
+                SaveFileDialog saveFile = new SaveFileDialog();
+                if (saveFile.ShowDialog() == true)
+                {
+                    foreach (var item in Db.Task.Where(el => el.ProjectId == SelectedProject.Id && el.StatusId == 1 && ((el.StartActualTime <= StartDate || el.CreatedTime <= StartDate)
+                && (el.FinishActualTime >= StartDate || el.Deadline >= StartDate) || (el.StartActualTime >= StartDate || el.CreatedTime >= StartDate)
+                && (el.StartActualTime <= EndDate || el.CreatedTime <= EndDate))))
+                    {
+                        csvList += $"{item.Id};{item.Project.FullTitle};{item.FullTitle};{item.ShortTitle};" +
+                            $"{item.Deadline};{item.TaskStatus.Name};{(item.Description != null ? item.Description : "")};{item.Employee.Name};" +
+                            $"{(item.CreatedTime != null ? item.CreatedTime.ToString() : "")};{(item.UpdatedTime != null ? item.UpdatedTime.ToString() : "")};" +
+                            $"{(item.DeletedTime != null ? item.DeletedTime.ToString() : "")};{(item.StartActualTime != null ? item.StartActualTime.ToString() : "")};" +
+                            $"{(item.FinishActualTime != null ? item.FinishActualTime.ToString() : "")};{(item.PreviousTaskId != null ? item.Task2.FullTitle : "")};\n";
+                    }
+                    if (!(saveFile.FileName + " ").Contains(".csv "))
+                    {
+                        saveFile.FileName = saveFile.FileName + ".csv";
+                    }
+                    File.WriteAllText(saveFile.FileName, csvList, UTF8Encoding.UTF8);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message);
+            }
+        }
+
+        private void ClosedOnMonthBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                DateTime StartDate = DateTime.Now.Date;
+                DateTime EndDate = DateTime.Now.Date;
+                StartDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+                EndDate = StartDate.AddMonths(1).AddDays(-1);
+                DateTime start = new DateTime();
+                DateTime end = new DateTime();
+                string csvList = "Id;Project;FullTitle;ShortTitle;Deadline;Status;Description;ExecutiveEmployee;CreatedTime;UpdatedTime;DeletedTime;StartActualTime;FinishActualTime;PreviousTask;\n";
+                SaveFileDialog saveFile = new SaveFileDialog();
+                if (saveFile.ShowDialog() == true)
+                {
+                    foreach (var item in Db.Task.Where(el => el.ProjectId == SelectedProject.Id && el.StatusId == 3 && ((el.StartActualTime <= StartDate || el.CreatedTime <= StartDate)
+                && (el.FinishActualTime >= StartDate || el.Deadline >= StartDate) || (el.StartActualTime >= StartDate || el.CreatedTime >= StartDate)
+                && (el.StartActualTime <= EndDate || el.CreatedTime <= EndDate))))
+                    {
+                        csvList += $"{item.Id};{item.Project.FullTitle};{item.FullTitle};{item.ShortTitle};" +
+                            $"{item.Deadline};{item.TaskStatus.Name};{(item.Description != null ? item.Description : "")};{item.Employee.Name};" +
+                            $"{(item.CreatedTime != null ? item.CreatedTime.ToString() : "")};{(item.UpdatedTime != null ? item.UpdatedTime.ToString() : "")};" +
+                            $"{(item.DeletedTime != null ? item.DeletedTime.ToString() : "")};{(item.StartActualTime != null ? item.StartActualTime.ToString() : "")};" +
+                            $"{(item.FinishActualTime != null ? item.FinishActualTime.ToString() : "")};{(item.PreviousTaskId != null ? item.Task2.FullTitle : "")};\n";
+                    }
+                    if (!(saveFile.FileName + " ").Contains(".csv "))
+                    {
+                        saveFile.FileName = saveFile.FileName + ".csv";
+                    }
+                    File.WriteAllText(saveFile.FileName, csvList, UTF8Encoding.UTF8);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message);
+            }
         }
     }
 }
