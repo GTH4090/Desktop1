@@ -19,6 +19,8 @@ using System.Windows.Threading;
 using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using Microsoft.Win32;
+using System.Windows.Forms.DataVisualization.Charting;
+using Grid = System.Windows.Controls.Grid;
 
 namespace WSRSim2.Pages
 {
@@ -35,11 +37,135 @@ namespace WSRSim2.Pages
             Timer.Interval = new TimeSpan(0, 0, 30);
             Timer.Tick += Timer_Tick;
             Timer.Start();
+            createGraph();
+            loadGraph();
+            loadGant();
+        }
+        private void loadGant()
+        {
+
+            try
+            {
+                DateTime EndDate = DateTime.Now.Date;
+                DateTime StartDate = EndDate.AddDays(-7 * 10 +1);
+                if (GantGrid != null)
+                {
+                    GantGrid.RowDefinitions.Clear();
+                    GantGrid.ColumnDefinitions.Clear();
+                    GantGrid.Children.Clear();
+                }
+                else
+                {
+                    return;
+                }
+                
+                GantGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(60) });
+                GantGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(60) });
+
+                double max = 0;
+                for(int i = 0; i <= (EndDate.Date - StartDate.Date).Days; i++)
+                {
+                    DateTime ThisDay = StartDate.AddDays(i);
+                    if (Db.Task.Where(el => el.ProjectId == SelectedProject.Id && (el.StartActualTime <= ThisDay || el.CreatedTime <= ThisDay) &&
+                    (el.FinishActualTime >= ThisDay || el.Deadline >= ThisDay)).Count() > max)
+                    {
+                        max = Db.Task.Where(el => el.ProjectId == SelectedProject.Id && (el.StartActualTime <= ThisDay || el.CreatedTime <= ThisDay) &&
+                    (el.FinishActualTime >= ThisDay || el.Deadline >= ThisDay)).Count();
+                    }
+                }
+
+                for (int i = 0; i <= (EndDate.Date - StartDate.Date).Days; i++)
+                {
+                    GantGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(60) });
+                    Label dateLb = new Label();
+                    Grid.SetColumn(dateLb, i);
+                    Grid.SetRow(dateLb, GantGrid.RowDefinitions.Count() - 1);
+                    DateTime thisDate = StartDate.AddDays(i);
+                    dateLb.Width = double.NaN;
+                    dateLb.Height = double.NaN;
+                    dateLb.Content = thisDate.ToString("dd/MM");
+                    dateLb.HorizontalAlignment = HorizontalAlignment.Center;
+                    Border border = new Border();
+                    border.BorderBrush = Brushes.Black;
+                    border.BorderThickness = new Thickness(2);
+                    Grid.SetColumn(border, i);
+                    Grid.SetRowSpan(border, 1);
+                    double count = Db.Task.Where(el => el.ProjectId == SelectedProject.Id && (el.StartActualTime <= thisDate || el.CreatedTime <= thisDate) &&
+                    (el.FinishActualTime >= thisDate || el.Deadline >= thisDate)).Count();
+                    if(count / max * 100 > 0 && count / max * 100 <= 20)
+                    {
+                        border.Background = (Brush)new BrushConverter().ConvertFromString("#b6bdff");
+                    }
+                    if (count / max * 100 > 20 && count / max * 100 <= 40)
+                    {
+                        border.Background = (Brush)new BrushConverter().ConvertFromString("#919cff");
+                    }
+                    if (count / max * 100 > 40 && count / max * 100 <= 60)
+                    {
+                        border.Background = (Brush)new BrushConverter().ConvertFromString("#6d7cff");
+                    }
+                    if (count / max * 100 > 60 && count / max * 100 <= 80)
+                    {
+                        border.Background = (Brush)new BrushConverter().ConvertFromString("#485bff");
+                    }
+                    if (count / max * 100 > 80 && count / max * 100 <= 100)
+                    {
+                        border.Background = (Brush)new BrushConverter().ConvertFromString("#243aff");
+                    }
+
+                    GantGrid.Children.Add(dateLb);
+                    GantGrid.Children.Add(border);
+
+                }
+
+                
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message);
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
             loadData();
+            loadGraph();
+        }
+        private void createGraph()
+        {
+
+            try
+            {
+                MainChart.ChartAreas.Add(new ChartArea("task"));
+                MainChart.Series.Add(new Series("123"));
+                MainChart.Series[0].ChartType = SeriesChartType.Doughnut;
+                MainChart.Series[0].LabelFormat = "P0";
+                MainChart.Series[0].IsValueShownAsLabel = true;
+                MainChart.Legends.Add(new Legend());
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message);
+            }
+        }
+        private void loadGraph()
+        {
+
+            try
+            {
+                var ox = Db.TaskStatus.Select(el => el.Name).ToList();
+                double taskCount = Db.Task.Where(e => e.ProjectId == SelectedProject.Id).Count();
+                var oy = Db.TaskStatus.Select(el => el.Task.Where(e => e.ProjectId == SelectedProject.Id).Count() / taskCount).ToList();
+
+                MainChart.Series[0].Points.DataBindXY(ox, oy);
+            }
+            catch (Exception ex)
+            {
+                Error(ex.Message);
+            }
         }
         private void CheckSize()
         {

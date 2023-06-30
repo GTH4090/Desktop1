@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WSRSim2.Pages"
       xmlns:Models="clr-namespace:WSRSim2.Models" x:Class="WSRSim2.Pages.DashBoard"
+      xmlns:Chart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ДашБорд" Loaded="Page_Loaded">
@@ -24,7 +25,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -99,5 +100,12 @@
             <Button x:Name="OpenedNextMonthBtn" Content="Откр. задачи на след. месяц" Width="Auto" Click="OpenedNextMonthBtn_Click"/>
         </StackPanel>
 
+        <WindowsFormsHost Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto">
+            <Chart:Chart x:Name="MainChart"/>
+        </WindowsFormsHost>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Grid.Row="2" Grid.ColumnSpan="3">
+            <Grid x:Name="GantGrid"/>
+        </ScrollViewer>
     </Grid>
 </Page>
