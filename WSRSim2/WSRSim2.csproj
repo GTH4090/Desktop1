@@ -67,6 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Employee.cs" />
     <Compile Include="Windows\GantWin.xaml.cs">
       <DependentUpon>GantWin.xaml</DependentUpon>
     </Compile>

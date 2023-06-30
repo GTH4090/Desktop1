@@ -1,14 +1,96 @@
-﻿<Page x:Class="WSRSim2.Pages.DashBoard"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WSRSim2.Pages"
+      xmlns:Models="clr-namespace:WSRSim2.Models" x:Class="WSRSim2.Pages.DashBoard"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="ДашБорд">
+      Title="ДашБорд" Loaded="Page_Loaded">
 
-    <Grid>
-        <Label Content="Дашборд"/>
+    <Page.Resources>
+        <CollectionViewSource x:Key="taskViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Task}}"/>
+        <CollectionViewSource x:Key="employeeViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:Employee}}"/>
+    </Page.Resources>
+
+    <Grid SizeChanged="Grid_SizeChanged" x:Name="MainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Label Content=" Кол-во незавершённых задач" Width="Auto"/>
+            <Label x:Name="OpenedCountLbl"/>
+            <DataGrid x:Name="openedtaskDataGrid" AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="fullTitleColumn" Binding="{Binding FullTitle}" Header="Full Title" Width="SizeToHeader"/>
+                    <DataGridTextColumn x:Name="shortTitleColumn" Binding="{Binding ShortTitle}" Header="Short Title" Width="SizeToHeader"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="1" x:Name="DeadlinedSp">
+            <Label Content="Кол-во просроченных задач" Width="Auto"/>
+            <Label x:Name="DeadlinedCountLbl"/>
+            <DataGrid x:Name="deadlinedtaskDataGrid" AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding FullTitle}" Header="Full Title" Width="SizeToHeader"/>
+                    <DataGridTextColumn Binding="{Binding ShortTitle}" Header="Short Title" Width="SizeToHeader"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" x:Name="ActiveSp">
+            <Label Content="Кол-во активных задач" Width="Auto"/>
+            <Label x:Name="ActiveCountLbl"/>
+            <DataGrid x:Name="activetaskDataGrid" AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding FullTitle}" Header="Full Title" Width="SizeToHeader"/>
+                    <DataGridTextColumn Binding="{Binding ShortTitle}" Header="Short Title" Width="SizeToHeader"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" x:Name="OpenPerWeedSp">
+            <Label Content="Кол-во незав. задач на неделю" Width="Auto"/>
+            <Label x:Name="OpenPerWeekCountLbl"/>
+            <DataGrid x:Name="OpenPerWeekDataGrid" AutoGenerateColumns="False" IsReadOnly="True" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding FullTitle}" Header="Full Title" Width="SizeToHeader"/>
+                    <DataGridTextColumn Binding="{Binding ShortTitle}" Header="Short Title" Width="SizeToHeader"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" x:Name="Top5BestSp">
+            <Label Content="Топ 5 сотрудников по закрытым задачам" Width="Auto"/>
+            <DataGrid x:Name="BestemployeeDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource employeeViewSource}}" RowDetailsVisibilityMode="VisibleWhenSelected">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="nameColumn" Binding="{Binding Name}" Header="Name" Width="SizeToHeader"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.Column="1" x:Name="Top5WorstSp">
+            <Label Content="Топ 5 сотрудников по просроченным задачам" Width="Auto"/>
+            <DataGrid x:Name="WorstemployeeDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True"  ItemsSource="{Binding Source={StaticResource employeeViewSource}}" RowDetailsVisibilityMode="VisibleWhenSelected">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="SizeToHeader"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </StackPanel>
+
     </Grid>
 </Page>
